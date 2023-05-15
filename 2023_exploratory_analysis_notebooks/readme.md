@@ -35,7 +35,8 @@
 - `2_analysis_regional_glacier_vs_climate_change.ipynb`
     - comparison of glacier changes to global or glacier regional climate changes 
 - `2_glacier_vs_climate_change_evolution.ipynb`
-    - work in process: for every region, all 80 experiments as lines dependent on the warming scenario (blue to red), either with global warming or regional warming 
+    - global plot, and for every RGI region, showing results by always using median (and quantiles) of glacier models 
+    - creates figures inside of `2_timeseries_temp_ch_reg_glob` and the Fig. `2_condensed_rgi_region_analysis.png` 
     
 ### Plans
 - analyse runaway effect ...
