@@ -1,26 +1,25 @@
 # Notebook overview:
-
-# find . -size +100M | cat >> .gitignore
-
+Most recent postprocessing date: `DATE = "Feb12_2024"`
 ### 0: Preprocessing, create datasets that can be analysed:
 
-- `000_test_for_duplicates_and_other_errors.ipynb`:
-    - checks if there are duplicates in the data of the submitted groups (now all duplicates were removed/resubmitted, so the tests are running without errors)
-    
+- `00_extract_isimip3a_gswp3-w5e5_glacier_climate_change.ipynb`:
+    - get past and current climate from ISIMIP3a GSWP3-W5E5 for the different glacier regions
 - `00_extract_isimip3b_glacier_climate_change.ipynb`: 
     - creates glacier-area global and regional temperature change averages `../data/temp_ch_ipcc_isimip3b_glacier_regionally.csv` and `figures/00_climate/00_temp_change_global_regional_glacier_hist_{scenario}.png`
     - to only get global mean temperature changes for each of the experiments (time periods and scenarios) and GCMs: go to `../isimip3b_postprocessing_analysis/isimip3b_postprocess_to_monthly.ipynb`
-    
+
 - `0a_analysis_regional_model_dataset_merging_and_initial_state_comparison.ipynb`
     - merges all regional glacier runs of the different models into one netCDF file 
     - creates: https://cluster.klima.uni-bremen.de/~lschuster/glacierMIP3_analysis/glacierMIP3_apr04_models_all_rgi_regions_sum_scaled.nc
     - (there might be a more recent date available)
     - volume/area scaling applied so that all models start at the same initial state
+- `0a1_test_for_duplicates_and_other_errors.ipynb`:
+    - checks if there are duplicates in the data of the submitted groups (now all duplicates were removed/resubmitted, so the tests are running without errors)
     
 - `0b_create_extended_5000yr_timeseries.ipynb`
     - uses the scaled netCDF file from the previous notebook and creates an extended notebook where all simulations go until simulation year 5000
         - applied option: repeat the values of the last 101 years
-    - creates e.g. https://cluster.klima.uni-bremen.de/~lschuster/glacierMIP3_analysis/glacierMIP3_Jan29_2024_models_all_rgi_regions_sum_scaled_extended_repeat_last_101yrs.nc
+    - creates e.g. https://cluster.klima.uni-bremen.de/~lschuster/glacierMIP3_analysis/glacierMIP3_Feb12_2024_models_all_rgi_regions_sum_scaled_extended_repeat_last_101yrs.nc
     
 - `0c_correction_regional_volume_change_until_2020.ipynb`-
     - shifts all time series to roughly the 2020 volume 
@@ -30,8 +29,6 @@
         - 'rgi_vs_2020_volume_hugonnet_estimates.csv'
     - creates the `shift....nc` file
         e.g.: https://cluster.klima.uni-bremen.de/~lschuster/glacierMIP3_analysis/all_shifted_glacierMIP3_Jan29_2024_models_all_rgi_regions_sum_scaled_extended_repeat_last_101yrs_via_5yravg.nc
-
-
 
  
 ### 1: First Analysis without really using temperature data
@@ -45,7 +42,7 @@
     
 
 
-### 2: Also include temp. change data
+### 2: Now compare dta relative to temp. change data
 - `lowess_fits/lowess_percentile_interval_fit_per_region_added_uncertainties.py`
     - need to execute the lines of `commandos_slurm.txt`
     - python scripts to create the lowess fits with uncertainties 
@@ -64,7 +61,7 @@
         - figures are in 2a_lowess_fits 
 
 
-- `2_glacier_vs_climate_change_evolution.ipynb`
+- `2a_glacier_vs_climate_change_evolution.ipynb`
     - global plot, and for every RGI region, showing results by always using median (and quantiles) of glacier models 
     - creates figures inside of `2_timeseries_temp_ch_reg_glob` and the Fig. `2_condensed_rgi_region_analysis.png` 
          - manuscript figure 1, 2 (TODO: need to update the figure to show LOWESS fit with uncertainties instead of exp. fit)
@@ -73,14 +70,16 @@
     - creates supplemental figures with x-axis the RGI regions and as y-axis ... (allow to also show uncertainties): 
         - steady-state statistics with uncertainties (1.2°C ice loss, temp. sensitvities - TODO _> update and add uncertainties)
     
-- `2_find_equilibrium_steady_state_yr.ipynb`
-    - find steady-state year (potentially interesting for one supplemental figure)
+- `2b_find_equilibrium_steady_state_yr.ipynb`
+    - find steady-state year (used at the moment for one supplemental figure)
 
 
-- `2depr_analysis_regional_glacier_vs_climate_change.ipynb` **(at the moment not anymore used for anything in the manuscript)**
+- `2depr_analysis_regional_glacier_vs_climate_change.ipynb` 
     - comparison of glacier changes to global or glacier regional climate changes 
+    - does not do the shift in the simulation years, but maybe good to keep it here for the moment, as it gives a quick overview of the non-shifted estimates ... 
+    - **(at the moment not anymore used for anything in the manuscript)**
     
-### 3: further analysis of steady state and time to reach 50 or 80% of the total changes
+### 3: further analysis of steady state, time to reach 50 or 80% of the total changes, and of regional characteristics related to these regional differences
 - `3a_response_time_analysis_with_2020_shift.ipynb`
         - time to reach 50 or 80% of the total changes (median over all models
             - also done for every glacier model separately (but this uses the "unshifted" data (to check!!!)
@@ -97,20 +96,28 @@
             - this is the same (but an older version notebook), thatonly used exponential fits with experiments with data >=0.8°C
             - deprecated 
 
-- `3c_lowess_shifted_fit_region_characteristics_glacier_response.ipynb
+- `3c_lowess_shifted_fit_region_characteristics_glacier_response.ipynb`
         
         
 ### 4: further aggregated figures such as the world map
 
 - `4_world_map_figure.ipynb`
     - world map plot created 
-    - (the subplots that go below the world map are created by 3_lowess_shifted_fit_region_characteristics_glacier_response.ipynb)
-    - 
+    - (the subplots that go below the world map are created in `3_lowess_shifted_fit_region_characteristics_glacier_response.ipynb`)
 
 ### discussion analysis
-- `5x_RGI04_barnes_ice_cap_analysis.ipynb`
 - `5_comparison_to_marzeion_et_al_2018.ipynb`
+    - Comparison of the GlacierMIP3 results (relative to inventory date) to those from Marzeion et al., (2018)
+- `5x_RGI04_barnes_ice_cap_analysis.ipynb`
+    - analysis of per-glacier files just for the Barnes Ice cap RGI IDs
 
+### Supplementary Data
+- `6_csv_tables_creation.ipynb`
+    - creates table for suppl. information about current and past volume changes (+ some regional characteristics, such as regional glacier surface slope)
+    - creates aswell table with steady-state regional glacier volume estimates with uncertainties ...
+    - ... what other tables do we need ? 
+        - TODO: maybe time to reach 80% of the total changes for the different regions??? 
+    - could be saved as .csv file, and directly exported as `.docx` file for the manuscript
 
 
 ## GlacierMIP3 Part B -> analyse glacier model differences
@@ -124,6 +131,7 @@
 
 - `PartB_1_annual_variability.ipynb` (***only interesting for GlacierMIP3 Part 2***)
     - shows the differences in the interannual regional volume variability between the glacier models (some models, specifically GloGEM-family, do not correlate with the other models)
+    - can not do that properly due to some strange things done in some models
     
 - `PartB_1_glacier_model_differences_first trials.ipynb` (***only interesting for GlacierMIP3 Part 2***)
  
@@ -133,7 +141,6 @@
         - not sure how to go on with that! 
         
         
-        
- ### Plans
-
-- analyse interannual variability -> we can not do that due to some strange things done in some models
+####### find . -size +100M | cat >> .gitignore
+- note that at the moment, all netcdf files or csv files are not included in the GitHub repository
+    - TODO: reduce amount of necessary csv files and data in order that they all have sizes <100 MB and can be uploaded to GitHub

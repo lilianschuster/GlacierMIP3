@@ -40,6 +40,6 @@ eggs
 *.csv
 2023_exploratory_analysis_notebooks/old_after_feb_2024/
 2023_exploratory_analysis_notebooks/figures/deprecated_older_versions/ 
-*.pdf
+
 # these are too many files for one commit ...
-2023_exploratory_analysis_notebooks/figures/1_overview_timeseries_plots/*   
+2023_exploratory_analysis_notebooks/figures/1_overview_timeseries_plots/*.pdf   
