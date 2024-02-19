@@ -1,0 +1,13 @@
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'all'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'all'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'all'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 50 'all'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 300 'all'
+
+
+# t
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_global'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_global'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'only_global'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 50 'only_global'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 300 'only_global'

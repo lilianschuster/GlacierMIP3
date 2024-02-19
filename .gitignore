@@ -32,3 +32,14 @@ eggs
 *.cache
 *.lock
 *.virtual_documents
+./.git/objects/pack/pack-62846faaaa283aeebdccdd6de91e96b3f7d392b6.pack
+./.git/objects/pack/pack-705c29fdebb93f129dac9d9550eba13a18c7649d.pack
+
+# for the moment just remove them due to 100 mb threshold ...
+*.nc
+*.csv
+2023_exploratory_analysis_notebooks/old_after_feb_2024/
+2023_exploratory_analysis_notebooks/figures/deprecated_older_versions/ 
+*.pdf
+# these are too many files for one commit ...
+2023_exploratory_analysis_notebooks/figures/1_overview_timeseries_plots/*   

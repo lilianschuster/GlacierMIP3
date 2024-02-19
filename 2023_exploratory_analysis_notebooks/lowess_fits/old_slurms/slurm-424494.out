@@ -1,0 +1,56 @@
+Requirement already satisfied: moepy in /home/users/lschuster/.local/lib/python3.10/site-packages (1.1.4)
+Requirement already satisfied: scikit-learn>=0.24.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.1.3)
+Requirement already satisfied: tqdm>=4.59.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (4.66.1)
+Requirement already satisfied: numpy>=1.19.5 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.23.2)
+Requirement already satisfied: pandas>=1.2.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.4.3)
+Requirement already satisfied: matplotlib>=3.3.3 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (3.5.3)
+Requirement already satisfied: scipy>=1.6.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.9.0)
+Requirement already satisfied: pillow>=6.2.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (9.2.0)
+Requirement already satisfied: kiwisolver>=1.0.1 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (1.4.4)
+Requirement already satisfied: packaging>=20.0 in /usr/local/pyenv/versions/3.10.9/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (23.0)
+Requirement already satisfied: fonttools>=4.22.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (4.36.0)
+Requirement already satisfied: python-dateutil>=2.7 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (2.8.2)
+Requirement already satisfied: pyparsing>=2.2.1 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (3.1.1)
+Requirement already satisfied: cycler>=0.10 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (0.11.0)
+Requirement already satisfied: pytz>=2020.1 in /home/users/lschuster/.local/lib/python3.10/site-packages (from pandas>=1.2.0->moepy) (2022.2.1)
+Requirement already satisfied: threadpoolctl>=2.0.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from scikit-learn>=0.24.0->moepy) (3.1.0)
+Requirement already satisfied: joblib>=1.0.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from scikit-learn>=0.24.0->moepy) (1.2.0)
+Requirement already satisfied: six>=1.5 in /home/users/lschuster/.local/lib/python3.10/site-packages (from python-dateutil>=2.7->matplotlib>=3.3.3->moepy) (1.16.0)
+
+[notice] A new release of pip available: 22.3.1 -> 24.0
+[notice] To update, run: pip install --upgrade pip
+Traceback (most recent call last):
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/file_manager.py", line 199, in _acquire_with_cache_info
+    file = self._cache[self._key]
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/lru_cache.py", line 53, in __getitem__
+    value = self._cache[key]
+KeyError: [<class 'netCDF4._netCDF4.Dataset'>, ('/home/www/lschuster/glacierMIP3_analysis/all_shifted_glacierMIP3_Jan29_2024_models_all_rgi_regions_sum_scaled_extended_repeat_last_100yrs_via_5_yravg.nc',), 'r', (('clobber', True), ('diskless', False), ('format', 'NETCDF4'), ('persist', False))]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/users/lschuster/GlacierMIP3/2023_exploratory_analysis_notebooks/lowess_fits/lowess_percentile_interval_fit_per_region_added_uncertainties.py", line 104, in <module>
+    ds_reg_yr_shift= xr.open_dataset(f'/home/www/lschuster/glacierMIP3_analysis/all_shifted_glacierMIP3_{DATE}_models_all_rgi_regions_sum_scaled_extended_{fill_option}{approach}.nc')
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/api.py", line 495, in open_dataset
+    backend_ds = backend.open_dataset(
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/netCDF4_.py", line 553, in open_dataset
+    store = NetCDF4DataStore.open(
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/netCDF4_.py", line 382, in open
+    return cls(manager, group=group, mode=mode, lock=lock, autoclose=autoclose)
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/netCDF4_.py", line 330, in __init__
+    self.format = self.ds.data_model
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/netCDF4_.py", line 391, in ds
+    return self._acquire()
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/netCDF4_.py", line 385, in _acquire
+    with self._manager.acquire_context(needs_lock) as root:
+  File "/usr/local/pyenv/versions/3.10.9/lib/python3.10/contextlib.py", line 135, in __enter__
+    return next(self.gen)
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/file_manager.py", line 187, in acquire_context
+    file, cached = self._acquire_with_cache_info(needs_lock)
+  File "/home/users/lschuster/.local/lib/python3.10/site-packages/xarray/backends/file_manager.py", line 205, in _acquire_with_cache_info
+    file = self._opener(*self._args, **kwargs)
+  File "src/netCDF4/_netCDF4.pyx", line 2353, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 1963, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: b'/home/www/lschuster/glacierMIP3_analysis/all_shifted_glacierMIP3_Jan29_2024_models_all_rgi_regions_sum_scaled_extended_repeat_last_100yrs_via_5_yravg.nc'
+srun: error: node02: task 0: Exited with exit code 1
+srun: Terminating StepId=424494.0
