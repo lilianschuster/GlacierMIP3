@@ -51,7 +51,7 @@ Most recent postprocessing date: `DATE = "Feb12_2024"`
     - creates csv files with the exponential fit (just for comparison), here the "shifted variant"
         - e.g.: fitted_lowess_best_frac_shift_years_rel_2020_101yr_avg_period_lowess_added_quantiles_added_current12deg_5000_{DATE}.csv
     - creates rather complex figure variants of Fig.2 of the manuscript (figures are in 2a_lowess_fits)
-        - those are simplified later in 2_glacier_vs_climate_change_evolution.ipynb
+        - those are simplified later in `2_glacier_vs_climate_change_evolution.ipynb`
 
 
 - `per_glacier_lowess_calib/lowess_percentile_interval_fit_per_model_per_region.py`
@@ -80,24 +80,28 @@ Most recent postprocessing date: `DATE = "Feb12_2024"`
     - **(at the moment not anymore used for anything in the manuscript)**
     
 ### 3: further analysis of steady state, time to reach 50 or 80% of the total changes, and of regional characteristics related to these regional differences
+
 - `3a_response_time_analysis_with_2020_shift.ipynb`
-        - time to reach 50 or 80% of the total changes (median over all models
-            - also done for every glacier model separately (but this uses the "unshifted" data (to check!!!)
+    - time to reach 50 or 80% of the total changes (median over all models
+        - also done for every glacier model separately (but this uses the "unshifted" data (to check!!!)
         - creates supplemental figures of "Time to reach 50%/80 % of the changes statistics" 
-        - `3depr_response_time_analysis.ipynb`:
-            - old version without a simulation year shift (maybe nice for GlacierMIP3 Part 2 study)
+    - `3depr_response_time_analysis.ipynb`:
+        - old version without a simulation year shift (maybe nice for GlacierMIP3 Part 2 study)
+        
 - `3b_extract_regional_climatic_glacier_median_response_time_characteristics.ipynb`
-        - extracts all the regional glacier/climate and response time characteristics and saves them under:
-            - creates '3_shift_summary_region_characteristics.csv'
-        - `3depr_fitted_glacier_response_clustering_all_exp_OLD.ipynb`:
-            - also includes exponential fit clustering
-            - deprecated
-        - `3depr_fitted_glacier_response_clustering_temp_above_0_8.ipynb`:
-            - this is the same (but an older version notebook), thatonly used exponential fits with experiments with data >=0.8°C
-            - deprecated 
+    -  extracts all the regional glacier/climate and response time characteristics and saves them under:
+        - creates '3_shift_summary_region_characteristics.csv'
+    - `3depr_fitted_glacier_response_clustering_all_exp_OLD.ipynb`:
+        - also includes exponential fit clustering
+        - deprecated
+    - `3depr_fitted_glacier_response_clustering_temp_above_0_8.ipynb`:
+        - this is the same (but an older version notebook), thatonly used exponential fits with experiments with data >=0.8°C
+        - deprecated 
 
 - `3c_lowess_shifted_fit_region_characteristics_glacier_response.ipynb`
-        
+   - does the K-means clustering
+   - creates Fig. 3b,c,d
+   - creates Fig. 4
         
 ### 4: further aggregated figures such as the world map
 
@@ -144,3 +148,7 @@ Most recent postprocessing date: `DATE = "Feb12_2024"`
 ####### find . -size +100M | cat >> .gitignore
 - note that at the moment, all netcdf files or csv files are not included in the GitHub repository
     - TODO: reduce amount of necessary csv files and data in order that they all have sizes <100 MB and can be uploaded to GitHub
+    
+    
+- todo:
+    - move all data csv-files into `data` folder, and adapt all paths accordingly ... 

@@ -24,7 +24,7 @@ sim_years = [5000] #,50,100,300,500] #100, 300, 500,
 
 qs = [0.5] #[0.05,0.25,0.5,0.75,0.95]
 
-N = 150#50 #200#50 #500 #100 #100 #100 #100#100
+N = 300#50 #200#50 #500 #100 #100 #100 #100#100
 it = 2 #2#2
 rgi_regs_global = ['All','01', '02', '03', '04', '05', '06', '07',
                    '08', '09', '10', '11', '12', '13', '14', '15',
@@ -213,8 +213,6 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
             df_quantiles_l = []
             sel_l = []
             for j, rgi_reg in enumerate(rgi_regs_global):
-                sel_l = []
-                df_quantiles_l = []
                 if rgi_reg == 'All':
                     _rgi_reg = 'Globally'
                 else:
@@ -468,7 +466,7 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                     if add_lowess:
                         eval_x =np.arange(x.min().round(1), x.max()*1.001, 0.05)
                         df_quantiles_ll = []
-                        for frac in np.arange(0.3,1,0.01):
+                        for frac in np.arange(0.1,1,0.01):
                             df_quantiles = lowess.quantile_model(x, y, x_pred=np.concatenate([eval_x,x]),
                                                                  frac=frac, num_fits=N, robust_iters=it,
                                                              qs=qs)
@@ -557,7 +555,7 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                         #        Ttemp_vol = f'  {Ttemp_vol}'
                         #    text = text + f'{Ttemp_vol}%\n'
                         #ax.text(0.995, num_y, text, color='red',transform=ax.transAxes, fontsize=22, va='bottom', ha='right')
-                        #print(rgi_reg, sel.frac.unique())
+                        print(rgi_reg, sel.frac.unique(), m)
                         for qq in qs:
                             sel.loc[sel[qq]<0, qq] = 0
                         ax.plot(sel.index, sel[0.5], color=dict_model_col[m], lw=4)
