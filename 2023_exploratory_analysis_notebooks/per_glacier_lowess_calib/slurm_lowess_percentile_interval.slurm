@@ -3,7 +3,7 @@
 #SBATCH --job-name=lowess_fits
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mail-user=lilian.schuster@student.uibk.ac.at
 #SBATCH --mail-type=ALL
 #SBATCH --qos=high
