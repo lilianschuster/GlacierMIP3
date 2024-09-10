@@ -1,4 +1,6 @@
 # at the moment, only tested here: http://localhost:7261/lab/tree/GlacierMIP3/2023_exploratory_analysis_notebooks/per_glacier_lowess_calib/trials.ipynb
+## **This has been updated to 0.69°C...**
+
 fit_to_per_glacier_models = True
 
 show_median = False
@@ -19,12 +21,18 @@ temp_ch = '' #'regional_glacier'
 shift_years = True
 temp_above_0_8_sel = False
 
+ipcc_ar6 = True
+# add that index to the saved figures and files
+if ipcc_ar6:
+    t_add = '_ipcc_ar6'
+else:
+    t_add = ''
 
 sim_years = [5000] #,50,100,300,500] #100, 300, 500, 
 
 qs = [0.5] #[0.05,0.25,0.5,0.75,0.95]
 
-N = 150#50 #200#50 #500 #100 #100 #100 #100#100
+N = 500 # just to be sure ... 150#50 #200#50 #500 #100 #100 #100 #100#100
 it = 2 #2#2
 rgi_regs_global = ['All','01', '02', '03', '04', '05', '06', '07',
                    '08', '09', '10', '11', '12', '13', '14', '15',
@@ -61,8 +69,30 @@ try:
 except:
     path_merged_runs_scaled_extend = f'/home/lilianschuster/Downloads/glacierMIP3_{DATE}_models_all_rgi_regions_sum_scaled_extended_{fill_option}.nc'
     ds_reg_models = xr.open_dataset(path_merged_runs_scaled_extend)
-# --> comes from isimip3b_postprocessing_analysis/isimip3b_postprocess_to_monthly.ipynb
-pd_global_temp_exp = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b.csv', index_col = 0)
+
+    # --> comes from isimip3b_postprocessing_analysis/isimip3b_postprocess_to_monthly.ipynb
+if ipcc_ar6:
+    pd_global_temp_exp = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_ar6_isimip3b.csv', index_col = 0)
+else:
+    pd_global_temp_exp = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b.csv', index_col = 0)
+if ipcc_ar6:
+    pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_ar6_isimip3b_glacier_regionally.csv', index_col = 0)
+else:
+    pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
+
+def get_glob_temp_exp(region='global'):
+    if ipcc_ar6:
+        pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_ar6_isimip3b_glacier_regionally.csv', index_col = 0)
+    else:
+        pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
+    _p = pd_global_temp_exp_glac.loc[pd_global_temp_exp_glac.region == region]
+    #print(_p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc'))
+    _p = _p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc')
+    return _p
+np.testing.assert_allclose(get_glob_temp_exp(region='global')['temp_ch_ipcc'].values,
+                                  pd_global_temp_exp.groupby(['gcm','period_scenario']).mean()['temp_ch_ipcc'].values, rtol=1e-5)
+
+
 
 from help_functions import pal_models, model_order, d_reg_num_name, model_order_anonymous
 
@@ -77,8 +107,6 @@ for m, p in zip(model_order, pal_models):
         
 for m in hue_order:
     hue_order_anonymous.append(model_order_anonymous[m])
-    
-    
 
 pal_models = pal_models_l
 pal_models = sns.color_palette(pal_models)
@@ -100,16 +128,6 @@ ds_reg_models_med_vol = ds_reg_models_vol.median(dim='model_author')
 num_dict = {0:'(a)', 1:'(b)', 2:'(c)', 3:'(d)', 4: '(e)', 5:'(f)', 6:'(g)', 7:'(h)', 8:'(i)', 9:'(j)', 10:'(k)', 11:'(l)', 12:'(m)'} 
 
 
-pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
-
-def get_glob_temp_exp(region='global'):
-    pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
-    _p = pd_global_temp_exp_glac.loc[pd_global_temp_exp_glac.region == region]
-    #print(_p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc'))
-    _p = _p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc')
-    return _p
-np.testing.assert_allclose(get_glob_temp_exp(region='global')['temp_ch_ipcc'].values,
-                                  pd_global_temp_exp.groupby(['gcm','period_scenario']).mean()['temp_ch_ipcc'].values, rtol=1e-5)
 import matplotlib
 matplotlib.__version__
 
@@ -574,21 +592,21 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
             if len(qs)>1:
                 add = add + '_quantiles_added'
             if temp_ch != 'regional_glacier':
-                plt.savefig(f'{f_path_f}2_per_model_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_{DATE}.png')
+                plt.savefig(f'{f_path_f}2_per_model_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_{DATE}{t_add}.png')
             else:
-                plt.savefig(f'{f_path_f}2_per_model_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_reg_glacier_temp_ch_{DATE}.png')
+                plt.savefig(f'{f_path_f}2_per_model_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_reg_glacier_temp_ch_{DATE}{t_add}.png')
             #if not test: 
             #    plt.close()
             
             pd_quantiles_concat = pd.concat(df_quantiles_l)
             pd_sel = pd.concat(sel_l)
             if temp_ch != 'regional_glacier':
-                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_per_model_glacier_response_to_global_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}.csv')
-                pd_quantiles_concat.to_csv(f'{f_path}fitted_per_model_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}.csv')
-                pd_sel.to_csv(f'{f_path}fitted_per_model_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}.csv')
+                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_per_model_glacier_response_to_global_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{t_add}.csv')
+                pd_quantiles_concat.to_csv(f'{f_path}fitted_per_model_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{t_add}.csv')
+                pd_sel.to_csv(f'{f_path}fitted_per_model_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{t_add}.csv')
             else:
-                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_per_model_glacier_response_to_global_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}.csv')
-                pd_quantiles_concat.to_csv(f'{f_path}fitted_per_model_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}.csv')
-                pd_sel.to_csv(f'{f_path}fitted_per_model_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}.csv')
+                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_per_model_glacier_response_to_global_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{t_add}.csv')
+                pd_quantiles_concat.to_csv(f'{f_path}fitted_per_model_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{t_add}.csv')
+                pd_sel.to_csv(f'{f_path}fitted_per_model_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{t_add}.csv')
 
             #pd_exp_decay_fits_adv.to_csv(f'fitted_glacier_response_to_global_temp_ch_complex_20yr_avg_period{add}.csv')

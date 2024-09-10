@@ -1,6 +1,13 @@
 #temp_ch = '' #'regional_glacier'
 # just do once sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'all' with "regional_glacier"
-temp_ch = 'regional_glacier' # just for Fig. S8 to do the fit over regional temp. changes ... 
+## **This has been updated to 0.69°C...**
+
+import time
+# Record the start time
+start_time = time.time()
+
+temp_ch = '' 
+#temp_ch = 'regional_glacier' # just for Fig. S8 to do the fit over regional temp. changes ... 
 
 
 import sys
@@ -8,19 +15,80 @@ sim_year = int(sys.argv[1]) #7 # central europe
 sim_years = [sim_year] #[5000]
 #sim_years = [5000, 50, 100,300,500] #100, 300, 500, 
 
+ipcc_ar6 = True
+
+# add that index to the saved figures and files
+if ipcc_ar6:
+    t_add = '_ipcc_ar6'
+else:
+    t_add = ''
 
 if str(sys.argv[2]) == 'only_global':
     modelsel_add = '_only_global_models'
     only_global_models = True
-else: # e.g. sys.argv[2] == 'all' 
+    rgi_regs_global = ['All','01',
+                   '02', '03', '04', '05', '06', '07',
+                   '08', '09', '10', '11', '12', '13', '14', '15',
+                   '16', '17', '18', '19']
+    region_sel_all = ['01', '02', '03', '04', '05', '06', '07',
+                   '08', '09', '10', '11', '12', '13', '14', '15',
+                   '16', '17', '18', '19'] # for the ALL
+elif str(sys.argv[2]) == 'only_reg_w_global_models':
+    modelsel_add = '_only_reg_w_global_models'
+    region_sel_all = ['01', '03', '04', '05', '07', '09', '17', '19']
+    rgi_regs_global = ['All']
+    only_global_models = True
+elif str(sys.argv[2]) == 'only_reg_w_global_glogemflow3d':
+    modelsel_add = '_only_reg_w_global_glogemflow3d'
+    region_sel_all = ['02', #'06', 
+                  '08', '10', #'11',
+                  '12', #'13', '14', '15', 
+                  '16', '18']
+    rgi_regs_global = ['All']
+    only_global_models = False
+elif str(sys.argv[2]) == 'only_reg_w_global_glogemflow3d_kraaijenbrink':
+    modelsel_add = '_only_reg_w_global_glogemflow3d_kraaijenbrink'
+    region_sel_all = ['13', '14', '15']
+    rgi_regs_global = ['All']
+    only_global_models = False
+elif str(sys.argv[2]) == 'all_regions_at_once': 
     modelsel_add = ''
     only_global_models = False
+    rgi_regs_global = ['All','01',
+                   '02', '03', '04', '05', '06', '07',
+                   '08', '09', '10', '11', '12', '13', '14', '15',
+                   '16', '17', '18', '19']
+    region_sel_all = ['01', '02', '03', '04', '05', '06', '07',
+                   '08', '09', '10', '11', '12', '13', '14', '15',
+                   '16', '17', '18', '19']
+elif str(sys.argv[2]) == 'Global': 
+    modelsel_add = 'global'
+    only_global_models = False
+    rgi_regs_global = ['All']
+    region_sel_all = ['01', '02', '03', '04', '05', '06', '07',
+                   '08', '09', '10', '11', '12', '13', '14', '15',
+                   '16', '17', '18', '19']
+elif str(sys.argv[2]) == 'global_via_agg_region_median': 
+    modelsel_add = 'global_via_agg_region_median'
+    only_global_models = False
+    rgi_regs_global = ['All']
+    region_sel_all = [['06'],['11'],
+                      ['01', '03', '04', '05', '07', '09', '17', '19'],
+                      ['02', '08', '10', '12', '16', '18'],
+                      ['13', '14', '15']]
+elif str(sys.argv[2]) in  ['01', '02', '03', '04', '05', '06', '07',
+                   '08', '09', '10', '11', '12', '13', '14', '15',
+                   '16', '17', '18', '19']:
+    modelsel_add = f'RGI{str(sys.argv[2])}'
+    only_global_models = False
+    rgi_regs_global = [str(sys.argv[2])]
+    region_sel_all = [str(sys.argv[2])]
 
 fit_to_median = False # False
 
 # download it here https://cluster.klima.uni-bremen.de/~lschuster/glacierMIP3_analysis/glacierMIP3_{DATE}_models_all_rgi_regions_sum_scaled.nc
 # and change the path to your local path
-DATE = 'Feb12_2024' #'apr04' (has OGGM runaway effect of glaciers inside)
+DATE = 'Feb12_2024' 
 fill_option = 'repeat_last_101yrs' 
 add_lowess=True
 #avg_over = '100yr'
@@ -28,14 +96,12 @@ shift_years = True
 temp_above_0_8_sel = False
 approach = '_via_5yravg'
 write_exp_text = True
-qs = [0.05,0.25,0.5,0.75,0.95]
+qs = [0.05,0.17,0.25,0.5,0.75,0.83,0.95]
+#qs = [0.17,0.5,0.83]
 
-N = 150#150#50 #500 #100 #100 #100 #100#100
-it = 2 #1#2
-rgi_regs_global = ['All','01',
-                   '02', '03', '04', '05', '06', '07',
-                   '08', '09', '10', '11', '12', '13', '14', '15',
-                   '16', '17', '18', '19']
+N = 500#500#0#0#150#50 #500 #100 #100 #100 #100#100
+it = 2#2 #1#2
+
 
 
 
@@ -69,8 +135,30 @@ except:
     path_merged_runs_scaled_extend = f'/home/lilianschuster/Downloads/glacierMIP3_{DATE}_models_all_rgi_regions_sum_scaled_extended_{fill_option}.nc'
     ds_reg_models = xr.open_dataset(path_merged_runs_scaled_extend)
 # --> comes from isimip3b_postprocessing_analysis/isimip3b_postprocess_to_monthly.ipynb
-pd_global_temp_exp = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b.csv', index_col = 0)
+if ipcc_ar6:
+    pd_global_temp_exp = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_ar6_isimip3b.csv', index_col = 0)
+else:
+    pd_global_temp_exp = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b.csv', index_col = 0)
 
+if ipcc_ar6:
+    pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_ar6_isimip3b_glacier_regionally.csv', index_col = 0)
+else:
+    pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
+
+def get_glob_temp_exp(region='global'):
+    if ipcc_ar6:
+        pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_ar6_isimip3b_glacier_regionally.csv', index_col = 0)
+    else:
+        pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
+    _p = pd_global_temp_exp_glac.loc[pd_global_temp_exp_glac.region == region]
+    #print(_p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc'))
+    _p = _p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc')
+    return _p
+    
+np.testing.assert_allclose(get_glob_temp_exp(region='global')['temp_ch_ipcc'].values,
+                                  pd_global_temp_exp.groupby(['gcm','period_scenario']).mean()['temp_ch_ipcc'].values, rtol=1e-5)
+
+    
 from help_functions import pal_models, model_order, d_reg_num_name, model_order_anonymous
 
 hue_order_anonymous = []
@@ -102,16 +190,6 @@ ds_reg_models_med_vol = ds_reg_models_vol.median(dim='model_author')
 num_dict = {0:'(a)', 1:'(b)', 2:'(c)', 3:'(d)', 4: '(e)', 5:'(f)', 6:'(g)', 7:'(h)', 8:'(i)', 9:'(j)', 10:'(k)', 11:'(l)', 12:'(m)'} 
 
 
-pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
-
-def get_glob_temp_exp(region='global'):
-    pd_global_temp_exp_glac = pd.read_csv(f'{f_path_data}data/temp_ch_ipcc_isimip3b_glacier_regionally.csv', index_col = 0)
-    _p = pd_global_temp_exp_glac.loc[pd_global_temp_exp_glac.region == region]
-    #print(_p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc'))
-    _p = _p.groupby(['gcm','period_scenario']).mean('temp_ch_ipcc')
-    return _p
-np.testing.assert_allclose(get_glob_temp_exp(region='global')['temp_ch_ipcc'].values,
-                                  pd_global_temp_exp.groupby(['gcm','period_scenario']).mean()['temp_ch_ipcc'].values, rtol=1e-5)
 import matplotlib
 matplotlib.__version__
 
@@ -159,7 +237,6 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
             pd_exp_decay_fits_simple = pd.DataFrame(index=np.arange(0,20*4,1),
                                                     columns=['rgi_reg','year',
                                                              'a_simple', 'b_simple'])
-
         else:
             def exponential_decay(x, a, b,c,d):
                 exp_values_b = -b * x
@@ -220,7 +297,13 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                     _rgi_reg = 'Globally'
                 else:
                     _rgi_reg = rgi_reg
-                vol_2020_reg = pd_rgi_stats_w_hugonnet.loc[_rgi_reg][f'regional_volume_m3_2020{approach}']
+                rgi_reg_ind = rgi_reg
+                if str(sys.argv[2]) in ['only_reg_w_global_models','only_reg_w_global_glogemflow3d','only_reg_w_global_glogemflow3d_kraaijenbrink']:
+                    rgi_reg_ind = str(region_sel_all)
+                    # for _r in region_sel_all:
+                    vol_2020_reg = pd_rgi_stats_w_hugonnet.loc[region_sel_all][f'regional_volume_m3_2020{approach}'].sum()
+                else:
+                    vol_2020_reg = pd_rgi_stats_w_hugonnet.loc[_rgi_reg][f'regional_volume_m3_2020{approach}']
 
                 if j<4:
                     ax = axs[0][j]
@@ -243,20 +326,23 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                         pd_global_temp_exp_m = get_glob_temp_exp(region='global_glacier')
                     if shift_years:
                         # we have done the dropping of everything after 4950, so the last year should be fine 
-                        ds_reg_models_med_vol_sel = ds_reg_models_med_vol_roll.isel(year_after_2020=-1).sum(dim='rgi_reg')
+                        ds_reg_models_med_vol_sel = ds_reg_models_med_vol_roll.isel(year_after_2020=-1).sel(rgi_reg=region_sel_all).sum(dim='rgi_reg')
                         # make sure that we only take here global models ... 
-                        ds_t2 = ds_reg_models_vol_roll.sum(dim='rgi_reg', min_count=19).isel(year_after_2020=-1).dropna(dim='model_author')
+                        ds_t2 = ds_reg_models_vol_roll.sel(rgi_reg=region_sel_all).sum(dim='rgi_reg', min_count=len(region_sel_all)).isel(year_after_2020=-1).dropna(dim='model_author')
                         ds_t2 = 100*ds_t2/vol_2020_reg
                         ds_t = 100*ds_reg_models_med_vol_sel/vol_2020_reg # TODO checkt that this is the sum ... 
                     
                     else:
-                        ds_reg_models_med_vol_sel = ds_reg_models_med_vol_roll.isel(simulation_year=-1).sum(dim='rgi_reg')
+                        ds_reg_models_med_vol_sel = ds_reg_models_med_vol_roll.isel(simulation_year=-1).sel(rgi_reg=region_sel_all).sum(dim='rgi_reg')
                         # make sure that we only take here global models ... 
-                        ds_t2 = ds_reg_models_vol_roll.sum(dim='rgi_reg', min_count=19).isel(simulation_year=-1).dropna(dim='model_author')
-                        ds_t2 = 100*ds_t2/ds_reg_models_vol.isel(simulation_year=0).sum(dim='rgi_reg', min_count=19)
+                        ds_t2 = ds_reg_models_vol_roll.sel(rgi_reg=region_sel_all).sum(dim='rgi_reg', min_count=len(region_sel_all)).isel(simulation_year=-1).dropna(dim='model_author')
+                        ds_t2 = 100*ds_t2/ds_reg_models_vol.isel(simulation_year=0).sel(rgi_reg=region_sel_all).sum(dim='rgi_reg', min_count=len(region_sel_all))
+                        ds_t = 100*ds_reg_models_med_vol_sel/ds_reg_models_med_vol.isel(simulation_year=0).sel(rgi_reg=region_sel_all).sum(dim='rgi_reg')
+                    # in that case, we do not want to look at the median over the aggregates, but want to do the fit over all individual model estimates:
+                    if str(sys.argv[2]) in ['only_reg_w_global_models','only_reg_w_global_glogemflow3d','only_reg_w_global_glogemflow3d_kraaijenbrink']:
+                        ds_t = ds_t2 
+                        print(str(sys.argv[2]))
 
-                        ds_t = 100*ds_reg_models_med_vol_sel/ds_reg_models_med_vol.isel(simulation_year=0).sum(dim='rgi_reg')
-                    
                     pd_tt2 = ds_t2.to_dataframe()
                     try:
                         pd_tt2 = pd_tt2.drop(columns=['gcm','period_scenario'])
@@ -304,10 +390,11 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                 pd_global_temp_exp_m_r = pd_global_temp_exp_m.reset_index()
                 pd_global_temp_exp_m_r['gcm'+'_'+'period_scenario'] = pd_global_temp_exp_m_r['gcm'] +'_'+pd_global_temp_exp_m_r['period_scenario']
                 pd_global_temp_exp_m_r.index = pd_global_temp_exp_m_r['gcm'+'_'+'period_scenario']
-                pd_tt2['gcm'+'_'+'period_scenario'] = pd_tt2['gcm'] +'_'+pd_tt2['period_scenario']
-                pd_tt2.index = pd_tt2['gcm'+'_'+'period_scenario']
-                pd_tt2.loc[pd_global_temp_exp_m_r.index, 'temp_ch_ipcc'] = pd_global_temp_exp_m_r['temp_ch_ipcc']
-                pd_tt2 = pd_tt2.reset_index(drop=True)
+                if rgi_reg == 'All' or fit_to_median:
+                    pd_tt2['gcm'+'_'+'period_scenario'] = pd_tt2['gcm'] +'_'+pd_tt2['period_scenario']
+                    pd_tt2.index = pd_tt2['gcm'+'_'+'period_scenario']
+                    pd_tt2.loc[pd_global_temp_exp_m_r.index, 'temp_ch_ipcc'] = pd_global_temp_exp_m_r['temp_ch_ipcc']
+                    pd_tt2 = pd_tt2.reset_index(drop=True)
 
                 pd_tt['gcm'+'_'+'period_scenario'] = pd_tt['gcm'] +'_'+pd_tt['period_scenario']
                 pd_tt.index = pd_tt['gcm'+'_'+'period_scenario']
@@ -361,10 +448,16 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                         pd_ttxx = pd_tt
                         # add legend...
                         n_models = len(pd_ttx.model_author.unique())
-                        line1 = Line2D([0], [0],
-                                       label='global model median:\n'+r'$\sum_{rgi=1}^{19} V_{median,rgi}$',
-                                       color='black', ms=10, marker='o', lw=0,alpha = 0.8)
-                        line2 = Line2D([0], [0], label=f'{n_models} individual global models', color='grey', ms=7, marker='s', lw=0,alpha = 0.6)
+                        if len(region_sel_all)==19:
+                            line1 = Line2D([0], [0],
+                                           label='global model median:\n'+r'$\sum_{rgi=1}^{19} V_{median,rgi}$',
+                                           color='black', ms=10, marker='o', lw=0,alpha = 0.8)
+                            line2 = Line2D([0], [0], label=f'{n_models} individual global models', color='grey', ms=7, marker='s', lw=0,alpha = 0.6)
+                        else:
+                            line1 = Line2D([0], [0],
+                                           label=f'{region_sel_all} model median:\n'+r'$\sum_{rgi=1}^{XX} V_{median,rgi}$',
+                                           color='black', ms=10, marker='o', lw=0,alpha = 0.8)
+                            line2 = Line2D([0], [0], label=f'{n_models} individual models', color='grey', ms=7, marker='s', lw=0,alpha = 0.6)
                         #add handles
                         handles= [line1, line2]
                         #add legend
@@ -445,7 +538,7 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                             #func_vars= r'$V_{\%}$(ΔT)='+f'{a_opt:.1f}*exp(-{b_opt:.2f}*(ΔT-{current_deltaT}°C))' 
                             func_vars= f'{v_n}'+r'(ΔT)='+f'{a_opt:.1f}'+r'$\cdot$'+f'exp(-{b_opt:.2f}'+r'$\cdot$(ΔT-'+f'{current_deltaT}°C))'
                             fs_label = 18
-                        #\n+'+f'{c_opt:.1f}*exp(-{d_opt:.2f}*ΔT²)' #+{c_opt:.2f}'
+
                 else:
                     a_opt, b_opt, c_opt, d_opt = popt
                     # Compute the fitted y values
@@ -478,9 +571,9 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                 ax.add_artist(leg2)
 
                 if version == 'simple':
-                    pd_exp_decay_fits_simple.iloc[jj] = (rgi_reg,sim_year, a_opt, b_opt)
+                    pd_exp_decay_fits_simple.iloc[jj] = (rgi_reg_ind,sim_year, a_opt, b_opt)
                 else:
-                    pd_exp_decay_fits_adv.iloc[jj] = (rgi_reg,sim_year, a_opt, b_opt, c_opt, d_opt)
+                    pd_exp_decay_fits_adv.iloc[jj] = (rgi_reg_ind,sim_year, a_opt, b_opt, c_opt, d_opt)
                 jj+=1
 
                 ax.set_ylim([-2,150])
@@ -497,7 +590,7 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                 if add_lowess:
                     eval_x =np.arange(x.min().round(1), x.max()*1.001, 0.05)
                     df_quantiles_ll = []
-                    for frac in np.arange(0.3,1,0.01):
+                    for frac in np.arange(0.1,1,0.01): # Apr2024: changed to also allow smaller frac parameters
                         df_quantiles = lowess.quantile_model(x, y, x_pred=np.concatenate([eval_x,x]),
                                                              frac=frac, num_fits=N, robust_iters=it,
                                                          qs=qs)
@@ -507,7 +600,7 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                         #ax.plot(df_quantiles.iloc[:len(eval_x)].index, lowi.iloc[:len(eval_x)], #label=f'lowess, frac= {frac}',
                         #        alpha = 0.8, lw=1, color='grey', zorder=-1)
                         df_quantiles['frac'] = frac
-                        df_quantiles['region'] = rgi_reg
+                        df_quantiles['region'] = rgi_reg_ind
                         df_quantiles['year'] = sim_year
                         df_quantiles['fit_to_median'] = fit_to_median
                         df_quantiles['temp_ch'] = temp_ch
@@ -552,7 +645,6 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
                         sel = _sel.loc[_sel.rmse == min_rmse]
                         sel = sel.sort_values('x')
                         #ax.plot(sel.index, sel[0.5], color='darkgreen', lw=3)
-
                         #sel2 = _sel.loc[_sel[f'min_{q}_diff_above_zero'] == max_diff_above_zero]
                         #sel2 = sel2.sort_values('x')
                         #ax.plot(sel2.index, sel2[0.5], color='blue', lw=3)
@@ -598,14 +690,14 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
 
                     ax.plot(sel.index, sel[0.5], color='red', lw=4)
                     if len(qs)>1 and rgi_reg != 'All':
-                        #ax.fill_between(sel.index, sel[0.25], sel[0.75], color='red', alpha = 0.2)
-                        ax.fill_between(sel.index, sel[0.25], sel[0.75], color='red', alpha = 0.25)
-                        ax.fill_between(sel.index, sel[0.05], sel[0.95], color='red', alpha = 0.15)
+                        ax.fill_between(sel.index, sel[0.25], sel[0.75], color='grey', alpha = 0.3)
+                        ax.fill_between(sel.index, sel[0.17], sel[0.83], color='grey', alpha = 0.2)
+                        ax.fill_between(sel.index, sel[0.05], sel[0.95], color='grey', alpha = 0.05)
 
                     sel_l.append(sel)
                     
                     if rgi_reg == '03':
-                        plt.savefig(f'{f_path_f}{sim_year}test_{DATE}{modelsel_add}{temp_ch}.png')
+                        plt.savefig(f'{f_path_f}{sim_year}test_{DATE}{modelsel_add}{temp_ch}{t_add}_likely_range.png')
             plt.tight_layout()
             if fit_to_median:
                 add = add + '_fit_to_median'
@@ -614,19 +706,31 @@ for temp_above_0_8 in [temp_above_0_8_sel]: #,False]: True
             if len(qs)>1:
                 add = add + '_quantiles_added'
             if temp_ch != 'regional_glacier':
-                plt.savefig(f'{f_path_f}2_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_{DATE}{modelsel_add}.png')
+                plt.savefig(f'{f_path_f}2_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_{DATE}{modelsel_add}{t_add}_likely_range.png')
             else:
-                plt.savefig(f'{f_path_f}2_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_reg_glacier_temp_ch_{DATE}{modelsel_add}.png')
+                plt.savefig(f'{f_path_f}2_glacier_volume_yr{p_shift}_{sim_year}_{avg_over}_avg_period_exp_decay_fit{version}{add}_current12deg_reg_glacier_temp_ch_{DATE}{modelsel_add}{t_add}_likely_range.png')
             #if not test: 
             #    plt.close()
             
             pd_quantiles_concat = pd.concat(df_quantiles_l)
             pd_sel = pd.concat(sel_l)
+
             if temp_ch != 'regional_glacier':
-                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_glacier_response_to_global_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{modelsel_add}.csv')
-                pd_quantiles_concat.to_csv(f'{f_path}fitted_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{modelsel_add}.csv')
-                pd_sel.to_csv(f'{f_path}fitted_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{modelsel_add}.csv')
+                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_glacier_response_to_global_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{modelsel_add}{t_add}_likely_range.csv')
+                pd_quantiles_concat.to_csv(f'{f_path}fitted_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{modelsel_add}{t_add}_likely_range.csv')
+                pd_sel.to_csv(f'{f_path}fitted_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_{sim_year}_{DATE}{modelsel_add}{t_add}_likely_range.csv')
             else:
-                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_glacier_response_to_reg_glacier_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{modelsel_add}.csv')
-                pd_quantiles_concat.to_csv(f'{f_path}fitted_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{modelsel_add}.csv')
-                pd_sel.to_csv(f'{f_path}fitted_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{modelsel_add}.csv')
+                pd_exp_decay_fits_simple.to_csv(f'{f_path}fitted_glacier_response_to_reg_glacier_temp_ch_simple{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{modelsel_add}{t_add}_likely_range.csv')
+                pd_quantiles_concat.to_csv(f'{f_path}fitted_lowess{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{modelsel_add}{t_add}_likely_range.csv')
+                pd_sel.to_csv(f'{f_path}fitted_lowess_best_frac{p_shift}_{avg_over}_avg_period{add}_current12deg_reg_glacier_temp_ch_{sim_year}_{DATE}{modelsel_add}{t_add}_likely_range.csv')
+
+
+
+# Record the end time
+end_time = time.time()
+# Calculate the elapsed time in seconds
+elapsed_time_seconds = end_time - start_time
+# Convert elapsed time to hours
+elapsed_time_hours = elapsed_time_seconds / 3600
+# Print the elapsed time in hours
+print(f"Elapsed time: {elapsed_time_hours:.4f} hours")

@@ -1,3 +1,62 @@
+### currently running
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'Global'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '01'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '02'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '03'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '04'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '05'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '06'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '07'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '08'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '09'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '10'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '11'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '12'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '13'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '14'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '15'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '16'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '17'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '18'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 '19'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_reg_w_global_models'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_reg_w_global_glogemflow3d'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_reg_w_global_glogemflow3d_kraaijenbrink'
+###
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'Global'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '01'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '02'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '03'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '04'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '05'
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '06'
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '07'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '08'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '09'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '10'
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '11'
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '12'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '13'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '14'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '15'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '16'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '17'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '18'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 '19'
+
+
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_reg_w_global_models'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_reg_w_global_glogemflow3d'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_reg_w_global_glogemflow3d_kraaijenbrink'
+
+
+#### old -> needs to be updated ... 
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'all'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'all'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'all'
@@ -5,9 +64,23 @@ sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 50 'all'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 300 'all'
 
 
-# t
+# test
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_global'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_global'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'only_global'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 50 'only_global'
 sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 300 'only_global'
+
+
+### compute aggregate region uncertainties
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_reg_w_global_models'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_reg_w_global_glogemflow3d'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 5000 'only_reg_w_global_glogemflow3d_kraaijenbrink'
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_reg_w_global_models'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_reg_w_global_glogemflow3d'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 100 'only_reg_w_global_glogemflow3d_kraaijenbrink'
+
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'only_reg_w_global_models'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'only_reg_w_global_glogemflow3d'
+sbatch slurm_lowess_percentile_interval_added_uncertainties.slurm 500 'only_reg_w_global_glogemflow3d_kraaijenbrink'

@@ -1,0 +1,30 @@
+WARNING: Ignoring invalid distribution -andas (/home/users/lschuster/.local/lib/python3.10/site-packages)
+Requirement already satisfied: moepy in /home/users/lschuster/.local/lib/python3.10/site-packages (1.1.4)
+Requirement already satisfied: tqdm>=4.59.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (4.66.1)
+Requirement already satisfied: numpy>=1.19.5 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.23.2)
+Requirement already satisfied: scipy>=1.6.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.9.0)
+Requirement already satisfied: matplotlib>=3.3.3 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (3.5.3)
+Requirement already satisfied: scikit-learn>=0.24.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (1.1.3)
+Requirement already satisfied: pandas>=1.2.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from moepy) (2.2.2)
+Requirement already satisfied: python-dateutil>=2.7 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (2.8.2)
+Requirement already satisfied: pillow>=6.2.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (9.2.0)
+Requirement already satisfied: cycler>=0.10 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (0.11.0)
+Requirement already satisfied: fonttools>=4.22.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (4.36.0)
+Requirement already satisfied: kiwisolver>=1.0.1 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (1.4.4)
+Requirement already satisfied: packaging>=20.0 in /usr/local/pyenv/versions/3.10.9/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (23.0)
+Requirement already satisfied: pyparsing>=2.2.1 in /home/users/lschuster/.local/lib/python3.10/site-packages (from matplotlib>=3.3.3->moepy) (3.1.1)
+Requirement already satisfied: pytz>=2020.1 in /home/users/lschuster/.local/lib/python3.10/site-packages (from pandas>=1.2.0->moepy) (2022.2.1)
+Requirement already satisfied: tzdata>=2022.7 in /home/users/lschuster/.local/lib/python3.10/site-packages (from pandas>=1.2.0->moepy) (2024.1)
+Requirement already satisfied: joblib>=1.0.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from scikit-learn>=0.24.0->moepy) (1.2.0)
+Requirement already satisfied: threadpoolctl>=2.0.0 in /home/users/lschuster/.local/lib/python3.10/site-packages (from scikit-learn>=0.24.0->moepy) (3.1.0)
+Requirement already satisfied: six>=1.5 in /home/users/lschuster/.local/lib/python3.10/site-packages (from python-dateutil>=2.7->matplotlib>=3.3.3->moepy) (1.16.0)
+WARNING: Ignoring invalid distribution -andas (/home/users/lschuster/.local/lib/python3.10/site-packages)
+
+[notice] A new release of pip available: 22.3.1 -> 24.2
+[notice] To update, run: pip install --upgrade pip
+  File "/home/users/lschuster/GlacierMIP3/2023_exploratory_analysis_notebooks/lowess_fits/lowess_percentile_interval_fit_per_region_added_uncertainties.py", line 512
+    30.03.2025xp(-{d_opt:.2f}*ΔT²)' #+{c_opt:.2f}'
+             ^
+SyntaxError: invalid decimal literal
+srun: error: node17: task 0: Exited with exit code 1
+srun: Terminating StepId=442152.0
