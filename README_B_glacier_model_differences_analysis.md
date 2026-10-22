@@ -14,8 +14,11 @@
 `'../PartB_data/resp_time_non_shifted_for_deltaT_rgi_reg_roll_volume_area_21yravg.csv'`
     - (very similar to http://localhost:7269/lab/tree/www_lschuster/GlacierMIP3/0_pre_post_processing/0e_response_timescale_estimates.ipynb, but here for the non-shifted, and for both volume and area!!!)
 
-!!! `delta ... to median model` columns of csv files. TODO: remove maybe this column for the file at the end because it also includes OGGM-VAS to get to the median ... 
+----
 
+!!! `delta ... to median model` columns of the csv files (`steady_state_relative_volume_change.csv`, `after80yrs_relative_volume_change.csv`, written in `PartB_3`). TODO: remove these columns before archiving the data! Their "median model" is the median over the glacier models of the absolute volume in every year, divided by the median 2020 volume, and not the median of the relative values (% of each glacier model's own 2020 mass). The difference to a recomputation is up to 1.3 %-points for 2.0–4.0 °C and up to 7.5 %-points under the 1995–2014 climate. All manuscript figures compute the differences from the raw column `relative volume change (in %)` (portrait figure corrected in Oct 2026). Still used in `PartB_4` -> recompute there if it is used for the paper.
+
+----
 
 - `PartB_1_annual_variability.ipynb` (***only interesting for GlacierMIP3 Part 2***)
     - shows the differences in the interannual regional volume variability between the glacier models (some models, specifically GloGEM-family, do not correlate with the other models)
